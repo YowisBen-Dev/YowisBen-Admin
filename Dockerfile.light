@@ -1,0 +1,29 @@
+# ============================================================
+# YowisBen Dev — Dockerfile RINGAN (tanpa builder Flutter)
+# Cocok kalau kuota/RAM Railway terbatas.
+# Fitur jalan: web admin, start/stop/restart, download video,
+# deploy website, fitur custom. HANYA "Deploy APK Flutter" yang
+# nonaktif (butuh Flutter SDK yang berat).
+# Untuk versi lengkap: pakai Dockerfile utama (tinggal pilih saat deploy).
+# ============================================================
+FROM node:20-bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    unzip ffmpeg python3 python3-pip ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN (pip3 install --break-system-packages yt-dlp 2>/dev/null || pip3 install yt-dlp) \
+  && yt-dlp --version
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN (npm ci --omit=dev 2>/dev/null || npm install --omit=dev)
+
+COPY . .
+RUN mkdir -p data public/sites
+
+EXPOSE 3000
+CMD ["node", "src/index.js"]

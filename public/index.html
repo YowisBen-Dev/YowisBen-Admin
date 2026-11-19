@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YowisBen Dev — Bot Controller</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- background aurora -->
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+  </div>
+
+  <!-- ============ LOGIN ============ -->
+  <div id="login-screen" class="login-wrap">
+    <div class="login-card">
+      <div class="logo-float">
+        <div class="logo-badge">⚡</div>
+        <h1>YowisBen <span>Dev</span></h1>
+        <p class="sub">Bot Controller — kelola bot Telegram dari genggaman</p>
+      </div>
+      <form id="login-form" autocomplete="off">
+        <label class="field">
+          <span class="field-icon">🔐</span>
+          <input type="password" id="login-pass" placeholder="Password admin" required>
+          <button type="button" id="pass-eye" class="eye" title="Tampilkan password">👁</button>
+        </label>
+        <p id="login-err" class="login-err"></p>
+        <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+          <span class="btn-label">Masuk Dashboard</span>
+        </button>
+      </form>
+      <p class="hint">Password di-set lewat variable <code>ADMIN_PASSWORD</code></p>
+    </div>
+    <p class="login-foot">© 2026 YowisBen Dev — dibuat dengan ☕ &amp; kode</p>
+  </div>
+
+  <!-- ============ APP ============ -->
+  <div id="app" class="app hidden">
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+
+    <aside id="sidebar" class="sidebar">
+      <div class="brand">
+        <div class="logo-badge small">⚡</div>
+        <div>
+          <strong>YowisBen Dev</strong>
+          <small>Bot Controller</small>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#dashboard" class="nav-item active" data-page="dashboard">
+          <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#features" class="nav-item" data-page="features">
+          <svg viewBox="0 0 24 24"><path d="M20.6 13.4 18 12l2.6-1.4a1 1 0 0 0 .1-1.7l-5-3.4a1 1 0 0 0-1.6.6L13 9l-1.4-2.6a1 1 0 0 0-1.7-.1l-3.4 5a1 1 0 0 0 .6 1.6L9 14l-2.6 1.4a1 1 0 0 0-.1 1.7l5 3.4a1 1 0 0 0 1.6-.6L14 17l1.4 2.6a1 1 0 0 0 1.7.1l3.4-5a1 1 0 0 0 .1-1.3z"/></svg>
+          <span>Fitur Bot</span>
+        </a>
+        <a href="#users" class="nav-item" data-page="users">
+          <svg viewBox="0 0 24 24"><path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm-8 1a3.5 3.5 0 1 0-3.5-3.5A3.5 3.5 0 0 0 8 12zm8 1c-2.7 0-8 1.3-8 4v3h16v-3c0-2.7-5.3-4-8-4zm-8 1c-.7 0-1.6.1-2.5.3C4 14.6 2 15.7 2 17.3V21h5v-4a5.9 5.9 0 0 1 1-3z"/></svg>
+          <span>Pengguna</span>
+        </a>
+        <a href="#logs" class="nav-item" data-page="logs">
+          <svg viewBox="0 0 24 24"><path d="M4 5h16v2H4zm0 6h10v2H4zm0 6h13v2H4zM17 9l4 3-4 3v-2h-3v-2h3z"/></svg>
+          <span>Log Server</span>
+        </a>
+        <a href="#settings" class="nav-item" data-page="settings">
+          <svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 4 4 4 4 0 0 0-4-4zm8.9 4a7 7 0 0 0-.1-1.2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-2-1.2L15.9 2h-4l-.4 2.6a7.4 7.4 0 0 0-2 1.2l-2.5-1-2 3.5 2.1 1.6a7 7 0 0 0 0 2.4l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 2 1.2l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 2-1.2l2.5 1 2-3.5-2.1-1.6a7 7 0 0 0 .1-1.2z"/></svg>
+          <span>Pengaturan</span>
+        </a>
+      </nav>
+
+      <div class="side-bottom">
+        <div class="side-status">
+          <span id="side-dot" class="dot"></span>
+          <span id="side-state">memuat…</span>
+        </div>
+        <button id="logout-btn" class="btn btn-ghost btn-block">
+          <span class="btn-label">🚪 Keluar</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button id="hamburger" class="hamburger" aria-label="Menu">☰</button>
+        <div class="top-title">
+          <h2 id="page-title">Dashboard</h2>
+          <p id="page-sub">Ringkasan bot kamu hari ini</p>
+        </div>
+        <div class="top-right">
+          <span id="status-pill" class="pill"><span class="dot"></span><span id="status-text">…</span></span>
+          <span id="uptime-pill" class="pill quiet">⏱ —</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- ===== DASHBOARD ===== -->
+        <section class="page active" id="page-dashboard">
+          <div class="greet">
+            <h3 id="greet-text">Selamat datang, Boss 🫡</h3>
+            <p>Semua sistem dalam kendali. Santai tapi tetap waspada.</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="card stat">
+              <div class="stat-ic ic1">👥</div>
+              <div><div class="stat-val" id="st-users">0</div><div class="stat-lab">Total Pengguna</div></div>
+            </div>
+            <div class="card stat">
+              <div class="stat-ic ic2">✅</div>
+              <div><div class="stat-val" id="st-verified">0</div><div class="stat-lab">Terverifikasi</div></div>
+            </div>
+            <div class="card stat">
+              <div class="stat-ic ic3">🚀</div>
+              <div><div class="stat-val" id="st-builds">0</div><div class="stat-lab">Build APK Sukses</div></div>
+            </div>
+            <div class="card stat">
+              <div class="stat-ic ic4">📥</div>
+              <div><div class="stat-val" id="st-videos">0</div><div class="stat-lab">Video Diunduh</div></div>
+            </div>
+            <div class="card stat">
+              <div class="stat-ic ic5">🌐</div>
+              <div><div class="stat-val" id="st-sites">0</div><div class="stat-lab">Website Live</div></div>
+            </div>
+          </div>
+
+          <div class="dash-grid">
+            <div class="card control">
+              <h4>🎛️ Kendali Bot</h4>
+              <p class="muted">Nyalakan, restart, atau matikan bot. Efeknya langsung terasa di Telegram.</p>
+              <div class="control-row">
+                <button class="btn btn-primary" id="btn-start"><span class="btn-label">▶ Start</span></button>
+                <button class="btn btn-warn" id="btn-restart"><span class="btn-label">🔄 Restart</span></button>
+                <button class="btn btn-danger" id="btn-stop"><span class="btn-label">⏹ Stop</span></button>
+              </div>
+              <div class="err-box hidden" id="bot-err"></div>
+              <div class="bot-meta" id="bot-meta"></div>
+            </div>
+
+            <div class="card">
+              <h4>📡 Konfigurasi Server</h4>
+              <ul class="cfg-list" id="cfg-list"></ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>🗞️ Aktivitas Terbaru</h4>
+            <div class="feed" id="activity-feed"></div>
+          </div>
+        </section>
+
+        <!-- ===== FEATURES ===== -->
+        <section class="page" id="page-features">
+          <div class="page-head">
+            <div>
+              <h3>Fitur Bot</h3>
+              <p class="muted">On/off fitur bawaan, atau bikin fitur baru — langsung aktif tanpa restart bot.</p>
+            </div>
+            <button class="btn btn-primary" id="btn-add-feature"><span class="btn-label">＋ Tambah Fitur</span></button>
+          </div>
+
+          <h4 class="sect-title">🧩 Bawaan</h4>
+          <div class="feat-grid" id="builtin-grid"></div>
+
+          <h4 class="sect-title">✨ Buatan Kamu</h4>
+          <div class="card table-card">
+            <div id="custom-list"></div>
+          </div>
+        </section>
+
+        <!-- ===== USERS ===== -->
+        <section class="page" id="page-users">
+          <div class="page-head">
+            <div>
+              <h3>Pengguna</h3>
+              <p class="muted">Siapa saja yang sudah mengobrol dengan bot.</p>
+            </div>
+            <input type="search" id="user-search" class="input" placeholder="🔎 Cari nama / username…">
+          </div>
+          <div class="card table-card">
+            <div class="table-scroll">
+              <table id="users-table">
+                <thead><tr><th>Nama</th><th>Username</th><th>Status</th><th>Aktivitas</th><th>Terakhir Lihat</th><th>Aksi</th></tr></thead>
+                <tbody id="users-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== LOGS ===== -->
+        <section class="page" id="page-logs">
+          <div class="page-head">
+            <div>
+              <h3>Log Server</h3>
+              <p class="muted">Live streaming — build APK, download video, verifikasi, semuanya kelihatan.</p>
+            </div>
+            <div class="log-tools">
+              <select id="log-filter" class="input">
+                <option value="">Semua level</option>
+                <option value="success">Sukses</option>
+                <option value="info">Info</option>
+                <option value="warn">Peringatan</option>
+                <option value="error">Error</option>
+              </select>
+              <label class="chk"><input type="checkbox" id="log-autoscroll" checked> autoscroll</label>
+              <button class="btn btn-ghost sm" id="btn-log-clear"><span class="btn-label">Bersihkan</span></button>
+              <button class="btn btn-ghost sm" id="btn-log-dl"><span class="btn-label">⬇ Unduh</span></button>
+            </div>
+          </div>
+          <div class="card terminal-wrap">
+            <div class="terminal" id="terminal"></div>
+          </div>
+        </section>
+
+        <!-- ===== SETTINGS ===== -->
+        <section class="page" id="page-settings">
+          <div class="page-head">
+            <div>
+              <h3>Pengaturan</h3>
+              <p class="muted">Broadcast ke semua pengguna verified &amp; info lingkungan server.</p>
+            </div>
+          </div>
+
+          <div class="dash-grid">
+            <div class="card">
+              <h4>📢 Broadcast</h4>
+              <p class="muted">Kirim pesan ke semua pengguna yang sudah verified.</p>
+              <textarea id="bc-text" class="input" rows="4" placeholder="Tulis pesan broadcast…"></textarea>
+              <div class="bc-foot">
+                <span id="bc-count" class="muted">0 karakter</span>
+                <button class="btn btn-primary" id="btn-broadcast"><span class="btn-label">Kirim 📢</span></button>
+              </div>
+            </div>
+            <div class="card">
+              <h4>🧾 Info Server</h4>
+              <ul class="kv" id="srv-info"></ul>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="foot">YowisBen Dev Bot Controller v1.0 — bot &amp; web dalam satu server ☕</footer>
+    </main>
+  </div>
+
+  <!-- modal & toast -->
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

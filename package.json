@@ -1,0 +1,19 @@
+{
+  "name": "yowisben-bot-controller",
+  "version": "1.0.0",
+  "description": "YowisBen Dev — Telegram Bot + Web Admin Controller (deploy APK Flutter, download video, deploy website)",
+  "type": "module",
+  "main": "src/index.js",
+  "author": "YowisBen Dev",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "grammy": "^1.30.0"
+  }
+}
